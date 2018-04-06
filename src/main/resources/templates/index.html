@@ -1,0 +1,57 @@
+<html xmlns="http://www.thymeleaf.org">
+	<head>
+		<meta content="text/html;charset=UTF-8"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<!-- @{}引入静态资源  需要进行动态处理元素使用th:为前缀-->
+		<link th:href="@{bootstrap-3.3.7-dist/css/bootstrap.min.css}" rel="stylesheet"/>
+		<link th:href="@{bootstrap-3.3.7-dist/css/bootstrap-theme.min.css}" rel="stylesheet"/>
+	</head>
+	
+	<body>
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">访问model</h3>
+			</div>
+		</div>
+		<div class="panel-body">
+			<!-- ${}访问model中属性，和JSP相似 -->
+			<!-- th:text动态将结果替换html标签体内原来的html文本 -->
+			<span th:text="${singlePerson.name}"></span>
+		</div>
+	
+		<!-- th:if 如果结果是true才显示该标签-->
+		<!-- lists.isEmpty 为了模板更加易用，Thymeleaf提供Utility对象（内置于Context中），可以通过#直接访问-->
+		<div th:if="${not #lists.isEmpty(people)}">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">列表</h3>
+				</div>
+			</div>
+			<div class="panel-body">
+				<ul class="list-group">
+					<!-- th:each循环迭代 -->
+					<li class="list-group-item" th:each="person,state:${people}">
+						<span th:text="${person.name}"></span>
+						<span th:text="${person.age}"></span>
+						<!-- 点击事件th:onclick="'getCollect()'" -->
+						<button class="btn" th:onclick="'getName(\'' + ${person.name} + '\');'">获得名字</button>
+					</li>
+				</ul>
+			</div>
+		</div>
+		
+		<script th:src="@{jquery-3.3.1.js}" type="text/javascript"></script>
+		<script th:src="@{jquery-3.3.1.min.js}" type="text/javascript"></script>
+		<script th:inline="javascript">
+			//th:inline="javascript"添加到script标签，这样js就可以访问model对象
+			//[[${}]]格式获得实际值
+			var single= [[${singlePerson}]];
+			console.log(single.name + "/" + single.age);
+			function getName(name){
+				console.log(name);
+			}
+		</script>
+	
+	</body>
+</html>
